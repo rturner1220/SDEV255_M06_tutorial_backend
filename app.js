@@ -7,7 +7,11 @@ require("./db"); // ensure DB connects on startup
 const Song = require("./models/song"); // <- make sure file is models/song.js
 
 const app = express();
-app.use(cors());
+
+// allow your frontend URL in prod, any origin in dev
+const allowed = process.env.FRONTEND_URL || "*";
+app.use(cors({ origin: allowed }));
+
 app.use(express.json());
 
 const router = express.Router();
@@ -74,4 +78,8 @@ router.delete("/songs/:id", async (req, res) => {
 
 // All requests that usually use an api start with /api... so the url would be localhost:3000
 app.use("/api", router);
-app.listen(3000, () => console.log("Server running on http://localhost:3000"));
+
+// ⬇️ use Render's port
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on :${PORT}`));
+
