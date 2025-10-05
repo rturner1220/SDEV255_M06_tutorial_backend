@@ -16,6 +16,10 @@ app.use(express.json());
 
 const router = express.Router();
 
+// ADD THESE TWO LINES HERE (root + health)
+app.get("/", (req, res) => res.send("API is running. Try /api/songs"));
+app.get("/healthz", (req, res) => res.send("ok"));
+
 // Grab all the songs in the database
 router.get("/songs", async function (req, res) {
   try {
@@ -79,7 +83,7 @@ router.delete("/songs/:id", async (req, res) => {
 // All requests that usually use an api start with /api... so the url would be localhost:3000
 app.use("/api", router);
 
-// ⬇️ use Render's port
+// use Render's port
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on :${PORT}`));
 

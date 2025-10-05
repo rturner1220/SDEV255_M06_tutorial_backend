@@ -1,11 +1,26 @@
+// db.js
 const mongoose = require("mongoose");
 
-const URI =
-  "mongodb+srv://sdev255:latataza1978@songdb.0caxhc5.mongodb.net/SongDB?retryWrites=true&w=majority&appName=SongDB";
+// Allow .env in local dev; Render just ignores this line.
+try { require("dotenv").config(); } catch {}
 
+// 1) Read the connection string from the environment
+const URI = process.env.MONGODB_URI;
+
+// 2) Fail fast if it’s missing
+if (!URI) {
+  console.error("MONGODB_URI is not set. Add it to .env (local) or Render env vars.");
+  process.exit(1);
+}
+
+// 3) Connect (Mongoose v8+ needs no extra options)
 mongoose
   .connect(URI)
   .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+  .catch((err) => {
+    console.error(" MongoDB connection error:", err.message);
+    process.exit(1);
+  });
 
 module.exports = mongoose;
+
